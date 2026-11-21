@@ -436,8 +436,12 @@ function pintarVisor(){
     if (p) media.append(p);
     else media.append(t.portada ? h('img', {src:t.portada, alt:''}) : h('span', {class:'vacio'}, '[Tu reel 9:16]'));
   } else {
-    media.append(t.portada ? h('img', {src:t.portada, alt:''}) : h('span', {class:'vacio'}, '[Portada del catálogo]'));
-    if (t.link) media.append(h('a', {class:'btn abrir', href:t.link, target:'_blank', rel:'noopener'}, 'Abrir catálogo'));
+    const p = reproductor(t.link);
+    if (p) media.append(p);
+    else {
+      media.append(t.portada ? h('img', {src:t.portada, alt:''}) : h('span', {class:'vacio'}, '[Portada del catálogo]'));
+      if (t.link) media.append(h('a', {class:'btn abrir', href:t.link, target:'_blank', rel:'noopener'}, 'Abrir catálogo'));
+    }
   }
   media.style.background = t.color;
   $('#m-tag').textContent = (t.tipo === 'reel' ? 'Reel' : 'Catálogo') + (t.marca ? ' · ' + t.marca : '');
