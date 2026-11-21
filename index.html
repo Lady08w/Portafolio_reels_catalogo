@@ -331,6 +331,13 @@ function portadaUrl(url){
   const id = driveId(url);
   return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : url;
 }
+function portadaDesdeLink(url){
+  if (!url) return '';
+  const id = driveId(url);
+  if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+  const m = url.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? `https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg` : '';
+}
 function reproductor(url){
   if (!url) return null;
   let m;
@@ -355,7 +362,7 @@ function normalizarTrabajo(t, i){
   return {
     tipo, marca: t.marca || '', titulo: t.titulo || '', descripcion: t.descripcion || '',
     herramientas: (t.herramientas || '').split(',').map((s) => s.trim()).filter(Boolean),
-    link: t.link || '', portada: portadaUrl(t.portada || ''), color: PASTELES[i % PASTELES.length]
+    link: t.link || '', portada: portadaUrl(t.portada || '') || portadaDesdeLink(t.link || ''), color: PASTELES[i % PASTELES.length]
   };
 }
 
