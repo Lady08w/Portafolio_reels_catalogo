@@ -38,7 +38,11 @@ button{font-family:inherit}
 .b4{width:280px;height:280px;background:#B8D8F8;bottom:-120px;left:-120px;opacity:.5}
 
 .app{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:44px 16px 130px}
-.view[hidden]{display:none}
+html{scroll-behavior:smooth}
+.seccion{scroll-margin-top:24px}
+.seccion + .seccion{margin-top:110px}
+.esquina{position:fixed;top:16px;right:16px;z-index:25;min-height:44px;padding:0 18px;box-shadow:var(--sombra)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* Tipografía */
 .titulo{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(60px,12vw,112px);line-height:.9;letter-spacing:-1px;margin:0}
@@ -98,7 +102,7 @@ button{font-family:inherit}
 .dock{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;width:min(440px,calc(100% - 32px));height:68px;border-radius:34px;background:var(--vidrio);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--borde);box-shadow:var(--sombra);display:flex;justify-content:space-around;align-items:center;padding:0 6px;z-index:20}
 .dock a{min-width:72px;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:11px;font-weight:500;border-radius:26px}
 .dock a:hover{color:var(--dark)}
-.dock a[aria-current="page"]{color:var(--acento);font-weight:600}
+.dock a[aria-current]{color:var(--acento);font-weight:600}
 .dock .dot{width:30px;height:30px;border-radius:15px;background:var(--acento);color:#fff;display:grid;place-items:center}
 
 /* Visor (modal) */
@@ -125,7 +129,7 @@ button{font-family:inherit}
 .solo-movil{display:none}
 
 @media (max-width:720px){
-  .app{padding-top:36px}
+  .app{padding-top:80px}
   .modal{padding:0;background:#000}
   .modal-box{width:100%;height:100%}
   .media{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0}
@@ -146,48 +150,43 @@ button{font-family:inherit}
 
 <div class="app">
   <!-- TRABAJOS -->
-  <section class="view" id="view-trabajos" aria-labelledby="nombre">
+  <section class="seccion" id="trabajos" aria-labelledby="nombre">
     <header>
       <h1 class="titulo" id="nombre"></h1>
       <p class="sub" id="subtitulo"></p>
-      <p class="tagline" id="tagline"></p>
     </header>
     <div class="filtros" id="filtros" role="group" aria-label="Filtrar trabajos"></div>
     <div class="grid" id="grid" aria-live="polite"></div>
   </section>
 
   <!-- PLANES -->
-  <section class="view" id="view-planes" aria-labelledby="t-planes" hidden>
-    <h1 class="titulo" id="t-planes">Planes</h1>
+  <section class="seccion" id="planes-sec" aria-labelledby="t-planes">
+    <h2 class="titulo" id="t-planes">Planes</h2>
     <p class="sub">Precios en USD</p>
     <div class="planes" id="planes"></div>
     <p class="nota" id="nota-planes"></p>
-    <a class="btn" href="#contacto">Escríbeme</a>
+    <a class="btn" data-wa>Escríbeme</a>
   </section>
 
   <!-- SOBRE MÍ -->
-  <section class="view" id="view-sobre-mi" aria-labelledby="t-sobre" hidden>
-    <h1 class="titulo" id="t-sobre">Sobre mí</h1>
+  <section class="seccion" id="sobre-mi" aria-labelledby="t-sobre">
+    <h2 class="titulo" id="t-sobre">Sobre mí</h2>
     <div class="sobre">
       <div id="foto-wrap"></div>
       <div class="card" id="bio"></div>
     </div>
   </section>
-
-  <!-- CONTACTO -->
-  <section class="view" id="view-contacto" aria-labelledby="t-contacto" hidden>
-    <h1 class="titulo" id="t-contacto">Escríbeme</h1>
-    <p class="tagline">Cuéntame qué necesitas y te respondo con una propuesta.</p>
-    <div class="contactos" id="contactos"></div>
-  </section>
 </div>
+
+<!-- BOTÓN DE LA ESQUINA -->
+<a class="btn esquina" data-wa><span data-icon="chat"></span>Escríbeme</a>
 
 <!-- MENÚ INFERIOR -->
 <nav class="dock" aria-label="Menú principal">
-  <a href="#trabajos" data-view="trabajos"><span data-icon="grid"></span>Trabajos</a>
-  <a href="#planes" data-view="planes"><span data-icon="tag"></span>Planes</a>
-  <a href="#sobre-mi" data-view="sobre-mi"><span data-icon="user"></span>Sobre mí</a>
-  <a href="#contacto" data-view="contacto"><span class="dot" data-icon="mail"></span>Contáctame</a>
+  <a href="#trabajos" data-sec="trabajos"><span data-icon="grid"></span>Trabajos</a>
+  <a href="#planes-sec" data-sec="planes-sec"><span data-icon="tag"></span>Planes</a>
+  <a href="#sobre-mi" data-sec="sobre-mi"><span data-icon="user"></span>Sobre mí</a>
+  <a data-wa><span class="dot" data-icon="mail"></span>Escríbeme</a>
 </nav>
 
 <!-- VISOR -->
@@ -225,14 +224,12 @@ const CONFIG = {
 
   nombre: 'Tatiana\nRoncancio',
   subtitulo: 'Edición de video · Catálogo digital',
-  tagline: '[Una línea: qué haces y para quién]',
 
-  sobreMi: '[Escribe aquí tu historia en 3 o 4 líneas: quién eres, qué haces y cómo trabajas.]',
+  sobreMi: 'Creo reels y hago catálogos digitales.',
   foto: '',                       // link de tu foto (opcional)
 
-  email: '',                      // ej: hola@tudominio.com
-  whatsapp: '',                   // solo números con indicativo, ej: 573001234567
-  instagram: '',                  // usuario sin @
+  whatsapp: '573144797566',       // todos los botones "Escríbeme" abren este WhatsApp
+  mensajeWhatsapp: 'Hola Tatiana, vi tu portafolio y quiero información.',
 
   notaPlanes: 'Cada reel incluye 1 ronda de correcciones.'
 };
@@ -414,19 +411,14 @@ function renderPerfil(){
   $('#nombre').textContent = CONFIG.nombre.replace('\n', ' ');
   $('#nombre').innerHTML = CONFIG.nombre.split('\n').map((s) => s.replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))).join('<br>');
   $('#subtitulo').textContent = CONFIG.subtitulo;
-  $('#tagline').textContent = CONFIG.tagline;
   $('#foto-wrap').replaceChildren(CONFIG.foto
     ? h('img', {class:'foto', src: portadaUrl(CONFIG.foto), alt: 'Foto de ' + CONFIG.nombre.replace('\n', ' ')})
     : h('div', {class:'foto'}, '[Tu foto]'));
-  $('#bio').replaceChildren(h('p', null, CONFIG.sobreMi), h('a', {class:'btn', href:'#contacto'}, 'Escríbeme'));
+  $('#bio').replaceChildren(h('p', null, CONFIG.sobreMi), h('a', {class:'btn', 'data-wa': true}, 'Escríbeme'));
 
-  const c = $('#contactos'); c.replaceChildren();
-  const item = (href, icono, etiqueta, valor) => h('a', {class:'card contacto', href, target: href.startsWith('http') ? '_blank' : null, rel: href.startsWith('http') ? 'noopener' : null},
-    h('span', {class:'circ', svg: icono}), h('span', null, h('small', null, etiqueta), h('strong', null, valor)));
-  if (CONFIG.email) c.append(item('mailto:' + CONFIG.email, 'mailBig', 'Correo', CONFIG.email));
-  if (CONFIG.whatsapp) c.append(item('https://wa.me/' + CONFIG.whatsapp.replace(/\D/g, ''), 'chat', 'WhatsApp', '+' + CONFIG.whatsapp.replace(/\D/g, '')));
-  if (CONFIG.instagram) c.append(item('https://instagram.com/' + CONFIG.instagram.replace('@', ''), 'ig', 'Instagram', '@' + CONFIG.instagram.replace('@', '')));
-  if (!c.children.length) c.append(h('p', {class:'tagline'}, '[Agrega tu correo, WhatsApp o Instagram en CONFIG]'));
+  // Todos los botones "Escríbeme" van a WhatsApp
+  const wa = 'https://wa.me/' + CONFIG.whatsapp.replace(/\D/g, '') + (CONFIG.mensajeWhatsapp ? '?text=' + encodeURIComponent(CONFIG.mensajeWhatsapp) : '');
+  document.querySelectorAll('[data-wa]').forEach((a) => { a.href = wa; a.target = '_blank'; a.rel = 'noopener'; });
 }
 
 /* ---------- Visor ---------- */
@@ -464,15 +456,16 @@ function cerrar(){
 }
 function mover(d){ actual = (actual + d + lista.length) % lista.length; pintarVisor(); }
 
-/* ---------- Navegación por secciones ---------- */
-const VISTAS = ['trabajos','planes','sobre-mi','contacto'];
-function mostrar(){
-  const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'trabajos';
-  VISTAS.forEach((x) => { $('#view-' + x).hidden = x !== v; });
-  document.querySelectorAll('.dock a').forEach((a) => a.toggleAttribute('aria-current', a.dataset.view === v));
-  document.querySelectorAll('.dock a[aria-current]').forEach((a) => a.setAttribute('aria-current', 'page'));
-  window.scrollTo(0, 0);
+/* ---------- Menú: marca la sección que se está viendo ---------- */
+function marcarSeccion(id){
+  document.querySelectorAll('.dock a[data-sec]').forEach((a) => {
+    if (a.dataset.sec === id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+  });
 }
+const observador = new IntersectionObserver((entradas) => {
+  entradas.forEach((en) => { if (en.isIntersecting) marcarSeccion(en.target.id); });
+}, {rootMargin: '-45% 0px -50% 0px'});
+document.querySelectorAll('.seccion').forEach((s) => observador.observe(s));
 
 /* ---------- Inicio ---------- */
 document.querySelectorAll('[data-icon]').forEach((s) => { s.innerHTML = ICONS[s.dataset.icon]; });
@@ -488,10 +481,8 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') mover(1);
   else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') mover(-1);
 });
-window.addEventListener('hashchange', mostrar);
-
 (async function iniciar(){
-  renderPerfil(); mostrar();
+  renderPerfil(); marcarSeccion('trabajos');
   $('#grid').replaceChildren(h('p', {class:'estado'}, 'Cargando trabajos…'));
   let filasTrabajos = DEMO_TRABAJOS, filasPlanes = DEMO_PLANES;
   if (CONFIG.sheetId) {
