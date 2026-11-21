@@ -109,10 +109,10 @@ button{font-family:inherit}
 .media iframe,.media video,.media img{width:100%;height:100%;border:0;display:block;object-fit:cover}
 .media .vacio{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:rgba(10,10,18,.6)}
 .media .abrir{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-.info{width:330px;display:flex;flex-direction:column;gap:10px}
-.info .tag{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--acento-txt)}
-.info h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:32px;line-height:1;letter-spacing:.5px;margin:0}
-.info p{margin:0;font-size:14px;line-height:1.55;color:var(--muted);white-space:pre-line}
+.info{width:260px;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:16px}
+.info h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:20px;line-height:1.1;letter-spacing:.5px;margin:0}
+.info p{margin:0;font-size:13px;line-height:1.45;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.info p:empty{display:none}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{font-size:12px;font-weight:500;padding:4px 10px;border-radius:12px;border:1px solid var(--borde);background:rgba(255,255,255,.55)}
 .redondo{width:44px;height:44px;border-radius:22px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--borde);display:grid;place-items:center;color:var(--dark);cursor:pointer;padding:0}
@@ -129,7 +129,7 @@ button{font-family:inherit}
   .modal{padding:0;background:#000}
   .modal-box{width:100%;height:100%}
   .media{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0}
-  .info{position:absolute;left:12px;right:12px;bottom:16px;width:auto;max-height:48vh;overflow:auto;z-index:2}
+  .info{position:absolute;left:12px;right:72px;bottom:16px;width:auto;z-index:2}
   .info.oculta{display:none}
   .solo-movil{display:grid}
   .flechas{right:12px;top:38%}
@@ -202,12 +202,8 @@ button{font-family:inherit}
   <div class="modal-box">
     <div class="media" id="m-media"></div>
     <div class="info card" id="m-panel">
-      <span class="tag" id="m-tag"></span>
       <h2 id="m-titulo"></h2>
       <p id="m-desc"></p>
-      <div class="chips" id="m-chips"></div>
-      <a class="btn btn-full" href="#contacto" data-cierra>Escríbeme</a>
-      <a class="link-suave" href="#planes" id="m-desde" data-cierra style="align-self:center"></a>
     </div>
   </div>
   <div class="flechas">
@@ -409,7 +405,6 @@ function renderPlanes(filas){
     ))
   )));
   const nums = filas.map((f) => parseFloat(String(f.precio).replace(/[^\d.]/g, ''))).filter((n) => !isNaN(n));
-  $('#m-desde').textContent = nums.length ? `Desde ${Math.min(...nums)} USD · Ver planes` : 'Ver planes';
   const nota = $('#nota-planes'); nota.replaceChildren();
   if (CONFIG.notaPlanes) nota.append(h('span', {svg:'redo'}), CONFIG.notaPlanes);
 }
@@ -451,10 +446,8 @@ function pintarVisor(){
     }
   }
   media.style.background = t.color;
-  $('#m-tag').textContent = (t.tipo === 'reel' ? 'Reel' : 'Catálogo') + (t.marca ? ' · ' + t.marca : '');
-  $('#m-titulo').textContent = t.titulo;
+  $('#m-titulo').textContent = t.titulo || t.marca;
   $('#m-desc').textContent = t.descripcion;
-  $('#m-chips').replaceChildren(...t.herramientas.map((x) => h('span', null, x)));
   $('#m-contador').textContent = `${String(actual + 1).padStart(2, '0')} / ${String(lista.length).padStart(2, '0')}`;
   const una = lista.length < 2;
   $('#m-prev').hidden = una; $('#m-next').hidden = una;
